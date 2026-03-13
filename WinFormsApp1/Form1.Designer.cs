@@ -1,4 +1,4 @@
-﻿namespace WinFormsApp1
+﻿namespace BlackjackOOP
 {
     partial class Form1
     {

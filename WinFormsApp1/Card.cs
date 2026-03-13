@@ -5,12 +5,12 @@ using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinFormsApp1
+namespace BlackjackOOP
 {
     public enum Rank
-    {
+    { 
         ACE = 1,
-        TWO2,
+        TWO,
         THREE,
         FOUR,
         FIVE,
@@ -19,13 +19,13 @@ namespace WinFormsApp1
         EIGHT,
         NINE,
         TEN,
-        JACK = 10,
-        QUEEN = 10,
-        KING = 10
+        JACK,
+        QUEEN,
+        KING
 
     }
 
-    public enum suit
+    public enum Suit
      {
         HEARTS,
         DIAMONDS,
@@ -44,24 +44,27 @@ namespace WinFormsApp1
         {
             get 
             {
-                switch(rank)
+                value = (int)rank;
+                switch (rank)
                 {
                     case Rank.ACE:
-                        value = 1;
+                        value = (int)Rank.ACE;
                         break;
                     case Rank.JACK:
                     case Rank.QUEEN:
                     case Rank.KING:
                         value = 10;
                         break;
-                    default:
-                        value = (int)rank;
                 }
                 return value; 
             }
+            set
+            {
+                this.value = value;
+            }
         }
 
-        public Card(Rank rank, suit suit)
+        public Card(Rank rank, Suit suit)
         {
             this.rank = rank;
             this.suit = suit;
@@ -74,7 +77,7 @@ namespace WinFormsApp1
 
         public override string ToString()
         {
-            return rank.ToString() * " OF " * suit.ToString();
+            return rank.ToString() + " OF " + suit.ToString();
         }
     }
 }
