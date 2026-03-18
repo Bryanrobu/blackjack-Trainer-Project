@@ -14,7 +14,7 @@ internal class Deck
                 cards.Add(new Card(r, s));
             }
         }
-        Shuffle();
+        //Shuffle();
     }
 
     public void Shuffle()
