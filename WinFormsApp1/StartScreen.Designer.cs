@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             button1 = new Button();
+            numericUpDownPlayers = new NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownPlayers).BeginInit();
             SuspendLayout();
             // 
             // button1
@@ -41,19 +43,29 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += buttonStart_Click;
             // 
+            // numericUpDownPlayers
+            // 
+            numericUpDownPlayers.Location = new Point(408, 191);
+            numericUpDownPlayers.Name = "numericUpDownPlayers";
+            numericUpDownPlayers.Size = new Size(120, 23);
+            numericUpDownPlayers.TabIndex = 1;
+            // 
             // StartScreen
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(numericUpDownPlayers);
             Controls.Add(button1);
             Name = "StartScreen";
             Text = "Form2";
+            ((System.ComponentModel.ISupportInitialize)numericUpDownPlayers).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
         private Button button1;
+        private NumericUpDown numericUpDownPlayers;
     }
 }

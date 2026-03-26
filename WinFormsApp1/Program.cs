@@ -14,7 +14,8 @@ namespace WinFormsApp1
             if (startScreen.ShowDialog() == DialogResult.OK)
             {
                 Point savedLocation = startScreen.Location;
-                Form1 mainGame = new Form1();
+                int gekozenSpelers = startScreen.NumberOfPlayers;
+                Form1 mainGame = new Form1(gekozenSpelers);
                 mainGame.StartPosition = FormStartPosition.Manual;
                 mainGame.Location = savedLocation;
                 Application.Run(mainGame);

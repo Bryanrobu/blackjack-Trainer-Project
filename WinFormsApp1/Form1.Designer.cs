@@ -35,6 +35,7 @@ namespace WinFormsApp1
             button2 = new Button();
             button3 = new Button();
             label1 = new Label();
+            label2 = new Label();
             SuspendLayout();
             // 
             // button1
@@ -76,11 +77,21 @@ namespace WinFormsApp1
             label1.TabIndex = 4;
             label1.Text = "label1";
             // 
+            // label3
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(43, 86);
+            label2.Name = "label2";
+            label2.Size = new Size(38, 15);
+            label2.TabIndex = 5;
+            label2.Text = "label2";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(803, 450);
+            Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(button3);
             Controls.Add(button2);

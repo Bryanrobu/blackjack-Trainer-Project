@@ -9,7 +9,7 @@ namespace WinFormsApp1
 
         private Deck deck;
         private int currentIndex = 0;
-        public Form1()
+        public Form1(int spelers)
         {
             InitializeComponent();
 
@@ -18,6 +18,7 @@ namespace WinFormsApp1
             button1.Text = "Next Card";
             button2.Text = "Shuffle Deck";
             button3.Text = "Reset Deck";
+            label2.Text = "Players: " + spelers;
         }
 
         private void Form1_Load(object sender, EventArgs e)
