@@ -14,10 +14,12 @@ namespace BlackjackOOP
             if (startScreen.ShowDialog() == DialogResult.OK)
             {
                 Point savedLocation = startScreen.Location;
+                Size savedSize = startScreen.Size;
                 int gekozenSpelers = startScreen.NumberOfPlayers;
                 Form1 mainGame = new Form1(gekozenSpelers);
                 mainGame.StartPosition = FormStartPosition.Manual;
                 mainGame.Location = savedLocation;
+                mainGame.Size = savedSize;
                 Application.Run(mainGame);
             }
 
