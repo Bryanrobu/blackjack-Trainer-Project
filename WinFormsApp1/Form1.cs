@@ -1,8 +1,7 @@
 using System.Net.Quic;
 using System.Reflection.Emit;
-using WinFormsApp1;
 
-namespace WinFormsApp1
+namespace BlackjackOOP
 {
     public partial class Form1 : Form
     {

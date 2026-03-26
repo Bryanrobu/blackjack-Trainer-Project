@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace WinFormsApp1
+namespace BlackjackOOP
 {
     public partial class StartScreen : Form
     {

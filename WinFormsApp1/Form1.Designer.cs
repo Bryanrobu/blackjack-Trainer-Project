@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace WinFormsApp1
+namespace BlackjackOOP
 {
     partial class Form1
     {

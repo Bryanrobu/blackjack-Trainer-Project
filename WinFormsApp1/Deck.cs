@@ -1,32 +1,36 @@
-﻿using WinFormsApp1;
+﻿using System;
+using System.Collections.Generic;
 
-internal class Deck
+namespace BlackjackOOP
 {
-    public List<Card> cards = new List<Card>();
-    private Random rng = new Random();
-
-    public Deck()
+    public class Deck
     {
-        foreach (Suit s in Enum.GetValues(typeof(Suit)))
+        public List<Card> cards = new List<Card>();
+        private Random rng = new Random();
+
+        public Deck()
         {
-            foreach (Rank r in Enum.GetValues(typeof(Rank)))
+            foreach (Suit s in Enum.GetValues(typeof(Suit)))
             {
-                cards.Add(new Card(r, s));
+                foreach (Rank r in Enum.GetValues(typeof(Rank)))
+                {
+                    cards.Add(new Card(r, s));
+                }
             }
         }
-    }
 
-    public void Shuffle()
-    {
-        int n = cards.Count;
-        while (n > 1)
+        public void Shuffle()
         {
-            n--;
-            int k = rng.Next(n + 1);
+            int n = cards.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
 
-            Card temp = cards[k];
-            cards[k] = cards[n];
-            cards[n] = temp;
+                Card temp = cards[k];
+                cards[k] = cards[n];
+                cards[n] = temp;
+            }
         }
     }
 }

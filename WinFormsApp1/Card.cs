@@ -33,7 +33,7 @@ namespace BlackjackOOP
         SPADES
     }
 
-    internal class Card
+    public class Card
     {
         private Rank rank;
         private int value;
