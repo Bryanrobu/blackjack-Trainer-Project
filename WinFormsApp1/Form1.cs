@@ -1,13 +1,15 @@
 using System.Net.Quic;
+using System.Reflection.Emit;
+using WinFormsApp1;
 
-namespace BlackjackOOP
+namespace WinFormsApp1
 {
     public partial class Form1 : Form
     {
 
         private Deck deck;
         private int currentIndex = 0;
-        public Form1()
+        public Form1(int spelers)
         {
             InitializeComponent();
 
@@ -16,6 +18,7 @@ namespace BlackjackOOP
             button1.Text = "Next Card";
             button2.Text = "Shuffle Deck";
             button3.Text = "Reset Deck";
+            label2.Text = "Players: " + spelers;
         }
 
         private void Form1_Load(object sender, EventArgs e)

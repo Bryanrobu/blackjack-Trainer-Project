@@ -8,10 +8,19 @@ namespace BlackjackOOP
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            StartScreen startScreen = new StartScreen();
+
+            if (startScreen.ShowDialog() == DialogResult.OK)
+            {
+                Point savedLocation = startScreen.Location;
+                int gekozenSpelers = startScreen.NumberOfPlayers;
+                Form1 mainGame = new Form1(gekozenSpelers);
+                mainGame.StartPosition = FormStartPosition.Manual;
+                mainGame.Location = savedLocation;
+                Application.Run(mainGame);
+            }
+
         }
     }
 }

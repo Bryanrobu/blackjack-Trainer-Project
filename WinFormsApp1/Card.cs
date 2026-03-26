@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace BlackjackOOP
 {
     public enum Rank
-    { 
+    {
         ACE = 1,
         TWO,
         THREE,
@@ -26,7 +26,7 @@ namespace BlackjackOOP
     }
 
     public enum Suit
-     {
+    {
         HEARTS,
         DIAMONDS,
         CLUBS,
@@ -42,7 +42,7 @@ namespace BlackjackOOP
 
         public int Value
         {
-            get 
+            get
             {
                 value = (int)rank;
                 switch (rank)
@@ -56,7 +56,7 @@ namespace BlackjackOOP
                         value = 10;
                         break;
                 }
-                return value; 
+                return value;
             }
             set
             {

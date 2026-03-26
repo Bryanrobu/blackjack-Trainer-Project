@@ -1,4 +1,4 @@
-﻿using BlackjackOOP;
+﻿using WinFormsApp1;
 
 internal class Deck
 {
@@ -14,7 +14,6 @@ internal class Deck
                 cards.Add(new Card(r, s));
             }
         }
-        //Shuffle();
     }
 
     public void Shuffle()
