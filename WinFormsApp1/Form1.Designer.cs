@@ -31,12 +31,22 @@ namespace WinFormsApp1
         /// </summary>
         private void InitializeComponent()
         {
+            label1 = new Label();
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
             label1 = new Label();
             label2 = new Label();
             SuspendLayout();
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(43, 30);
+            label1.Name = "label1";
+            label1.Size = new Size(38, 15);
+            label1.TabIndex = 0;
+            label1.Text = "label1";
             // 
             // button1
             // 
@@ -96,6 +106,7 @@ namespace WinFormsApp1
             Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
+            Controls.Add(label1);
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;

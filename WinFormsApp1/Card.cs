@@ -5,7 +5,7 @@ using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WinFormsApp1
+namespace BlackjackOOP
 {
     public enum Rank
     {

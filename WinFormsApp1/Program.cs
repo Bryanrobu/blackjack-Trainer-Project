@@ -1,4 +1,4 @@
-namespace WinFormsApp1
+namespace BlackjackOOP
 {
     internal static class Program
     {
