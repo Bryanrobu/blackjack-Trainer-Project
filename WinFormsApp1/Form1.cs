@@ -9,6 +9,7 @@ namespace BlackjackOOP
 
         private Deck deck;
         private int currentIndex = 0;
+        private int mistakes = 0;
 
         public enum gameState
         {
@@ -30,6 +31,7 @@ namespace BlackjackOOP
             button3.Text = "Reset Deck";
             label2.Text = "Players: " + spelers;
             label3.Text = currentState.ToString();
+            label4.Text = "mistakes: " + mistakes.ToString();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -39,6 +41,7 @@ namespace BlackjackOOP
         private void UpdateDisplay()
         {
             label3.Text = currentState.ToString();
+            label4.Text = "mistakes: " + mistakes.ToString();
             if (currentIndex >= deck.cards.Count)
             {
                 MessageBox.Show("No cards left!");
@@ -53,7 +56,15 @@ namespace BlackjackOOP
 
         private void button1_Click(object sender, EventArgs e)
         {
-            currentIndex++;
+            switch (currentState)
+            {
+                case gameState.SHUFFLED:
+                    currentIndex++;
+                    break;
+                case gameState.START:
+                    mistakes++;
+                    break;
+            }
 
             if (currentIndex >= deck.cards.Count)
             {
