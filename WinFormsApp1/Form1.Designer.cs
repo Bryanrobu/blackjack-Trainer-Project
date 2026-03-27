@@ -95,7 +95,6 @@ namespace BlackjackOOP
             label3.Size = new Size(38, 15);
             label3.TabIndex = 6;
             label3.Text = "label3";
-            label3.Click += label3_Click;
             // 
             // Form1
             // 

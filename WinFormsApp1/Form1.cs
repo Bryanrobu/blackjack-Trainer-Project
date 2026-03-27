@@ -74,10 +74,5 @@ namespace BlackjackOOP
             currentIndex = 0;
             UpdateDisplay();
         }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
