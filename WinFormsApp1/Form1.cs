@@ -1,5 +1,6 @@
 using System.Net.Quic;
 using System.Reflection.Emit;
+using static BlackjackOOP.Form1;
 
 namespace BlackjackOOP
 {
@@ -8,6 +9,15 @@ namespace BlackjackOOP
 
         private Deck deck;
         private int currentIndex = 0;
+
+        public enum gameState
+        {
+            SETUP,
+            START,
+            ROUND
+        }
+        public static gameState currentState = gameState.SETUP;
+
         public Form1(int spelers)
         {
             InitializeComponent();
@@ -18,6 +28,7 @@ namespace BlackjackOOP
             button2.Text = "Shuffle Deck";
             button3.Text = "Reset Deck";
             label2.Text = "Players: " + spelers;
+            label3.Text = currentState.ToString();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -62,6 +73,11 @@ namespace BlackjackOOP
             deck = new Deck();
             currentIndex = 0;
             UpdateDisplay();
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

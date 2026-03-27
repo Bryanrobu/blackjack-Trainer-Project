@@ -33,6 +33,7 @@ namespace BlackjackOOP
         {
             button1 = new Button();
             numericUpDownPlayers = new NumericUpDown();
+            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)numericUpDownPlayers).BeginInit();
             SuspendLayout();
             // 
@@ -53,22 +54,34 @@ namespace BlackjackOOP
             numericUpDownPlayers.Size = new Size(120, 23);
             numericUpDownPlayers.TabIndex = 1;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(750, 9);
+            label1.Name = "label1";
+            label1.Size = new Size(38, 15);
+            label1.TabIndex = 2;
+            label1.Text = "label1";
+            // 
             // StartScreen
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label1);
             Controls.Add(numericUpDownPlayers);
             Controls.Add(button1);
             Name = "StartScreen";
             Text = "Form2";
             ((System.ComponentModel.ISupportInitialize)numericUpDownPlayers).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private Button button1;
         private NumericUpDown numericUpDownPlayers;
+        private Label label1;
     }
 }
