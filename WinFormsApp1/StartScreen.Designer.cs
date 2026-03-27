@@ -39,7 +39,8 @@ namespace BlackjackOOP
             // 
             // button1
             // 
-            button1.Location = new Point(327, 191);
+            button1.Anchor = AnchorStyles.None;
+            button1.Location = new Point(285, 201);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 0;
@@ -49,15 +50,17 @@ namespace BlackjackOOP
             // 
             // numericUpDownPlayers
             // 
-            numericUpDownPlayers.Location = new Point(408, 191);
+            numericUpDownPlayers.Anchor = AnchorStyles.None;
+            numericUpDownPlayers.Location = new Point(366, 201);
             numericUpDownPlayers.Name = "numericUpDownPlayers";
             numericUpDownPlayers.Size = new Size(120, 23);
             numericUpDownPlayers.TabIndex = 1;
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label1.AutoSize = true;
-            label1.Location = new Point(750, 9);
+            label1.Location = new Point(706, 9);
             label1.Name = "label1";
             label1.Size = new Size(38, 15);
             label1.TabIndex = 2;

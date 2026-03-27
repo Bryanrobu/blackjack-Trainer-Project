@@ -89,8 +89,9 @@ namespace BlackjackOOP
             // 
             // label3
             // 
+            label3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label3.AutoSize = true;
-            label3.Location = new Point(753, 9);
+            label3.Location = new Point(706, 9);
             label3.Name = "label3";
             label3.Size = new Size(38, 15);
             label3.TabIndex = 6;

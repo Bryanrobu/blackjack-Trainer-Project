@@ -14,6 +14,7 @@ namespace BlackjackOOP
         {
             SETUP,
             START,
+            SHUFFLED,
             ROUND
         }
         public static gameState currentState = gameState.SETUP;
@@ -37,6 +38,7 @@ namespace BlackjackOOP
         }
         private void UpdateDisplay()
         {
+            label3.Text = currentState.ToString();
             if (currentIndex >= deck.cards.Count)
             {
                 MessageBox.Show("No cards left!");
@@ -64,12 +66,25 @@ namespace BlackjackOOP
 
         private void button2_Click(object sender, EventArgs e)
         {
+            switch(currentState) {
+                case gameState.START:
+                    currentState = gameState.SHUFFLED;
+                    break;
+
+            }
             deck.Shuffle();
             UpdateDisplay();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            switch (currentState)
+            {
+                case gameState.SHUFFLED:
+                    currentState = gameState.START;
+                    break;
+
+            }
             deck = new Deck();
             currentIndex = 0;
             UpdateDisplay();
