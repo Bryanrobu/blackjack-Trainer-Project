@@ -10,6 +10,7 @@ namespace BlackjackOOP
         private Deck deck;
         private int currentIndex = 0;
         private int mistakes = 0;
+        private List<Player> actieveSpelers = new List<Player>();
 
         public enum gameState
         {
@@ -32,6 +33,30 @@ namespace BlackjackOOP
             label2.Text = "Players: " + spelers;
             label3.Text = currentState.ToString();
             label4.Text = "mistakes: " + mistakes.ToString();
+            for (int i = 1; i <= spelers; i++)
+            {
+                Player nieuweSpeler = new Player("Speler " + i);
+
+                ToolStripMenuItem spelerMenu = new ToolStripMenuItem(nieuweSpeler.Name);
+
+                ToolStripMenuItem hitItem = new ToolStripMenuItem("Hit");
+                ToolStripMenuItem standItem = new ToolStripMenuItem("Stand");
+                ToolStripMenuItem adviesItem = new ToolStripMenuItem("Vraag advies");
+
+                hitItem.Tag = nieuweSpeler;
+                standItem.Tag = nieuweSpeler;
+                adviesItem.Tag = nieuweSpeler;
+
+                hitItem.Click += PlayerMenuItem_Click;
+                standItem.Click += PlayerMenuItem_Click;
+                adviesItem.Click += PlayerMenuItem_Click;
+
+                spelerMenu.DropDownItems.Add(hitItem);
+                spelerMenu.DropDownItems.Add(standItem);
+                spelerMenu.DropDownItems.Add(adviesItem);
+
+                menuStrip1.Items.Add(spelerMenu);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -77,7 +102,8 @@ namespace BlackjackOOP
 
         private void button2_Click(object sender, EventArgs e)
         {
-            switch(currentState) {
+            switch (currentState)
+            {
                 case gameState.START:
                     currentState = gameState.SHUFFLED;
                     break;
@@ -99,6 +125,39 @@ namespace BlackjackOOP
             deck = new Deck();
             currentIndex = 0;
             UpdateDisplay();
+        }
+
+        private void PlayerMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
+            Player geselecteerdeSpeler = (Player)clickedItem.Tag;
+            string actie = clickedItem.Text;
+
+            if (actie == "Vraag advies")
+            {
+                string advies = geselecteerdeSpeler.GetMoveOpinion();
+                MessageBox.Show($"{geselecteerdeSpeler.Name} wilt: {advies}");
+            }
+            else if (actie == "Hit")
+            {
+                if (currentState != gameState.SHUFFLED)
+                {
+                    mistakes++;
+                    UpdateDisplay();
+                }
+                if (deck != null && currentIndex < deck.cards.Count)
+                {
+                    Card kaart = deck.cards[currentIndex];
+                    geselecteerdeSpeler.ReceiveCard(kaart);
+                    currentIndex++;
+                    UpdateDisplay();
+                    MessageBox.Show($"{geselecteerdeSpeler.Name} hit en krijgt: {kaart}\nTotaal nu: {geselecteerdeSpeler.GetCurrentHandValue()}");
+                }
+            }
+            else if (actie == "Stand")
+            {
+                MessageBox.Show($"{geselecteerdeSpeler.Name} blijft staan op {geselecteerdeSpeler.GetCurrentHandValue()}.");
+            }
         }
     }
 }
