@@ -9,6 +9,7 @@ namespace BlackjackOOP
 
         private Deck deck;
         private int currentIndex = 0;
+        private int huidigeSpelerIndex = 0;
         private int mistakes = 0;
         private List<Player> actieveSpelers = new List<Player>();
 
@@ -37,6 +38,7 @@ namespace BlackjackOOP
             for (int i = 1; i <= spelers; i++)
             {
                 Player nieuweSpeler = new Player("Speler " + i);
+                actieveSpelers.Add(nieuweSpeler);
 
                 ToolStripMenuItem spelerMenu = new ToolStripMenuItem(nieuweSpeler.Name);
 
@@ -134,6 +136,14 @@ namespace BlackjackOOP
             Player geselecteerdeSpeler = (Player)clickedItem.Tag;
             string actie = clickedItem.Text;
 
+            if (geselecteerdeSpeler != actieveSpelers[huidigeSpelerIndex])
+            {
+                mistakes++;
+                UpdateDisplay();
+
+                return;
+            }
+
             switch (actie)
             {
                 case "Vraag advies":
@@ -187,6 +197,7 @@ namespace BlackjackOOP
                         UpdateDisplay();
                     }
                     MessageBox.Show($"{geselecteerdeSpeler.Name} blijft staan op {geselecteerdeSpeler.GetCurrentHandValue()}.");
+                    huidigeSpelerIndex++;
                     break;
             }
         }
