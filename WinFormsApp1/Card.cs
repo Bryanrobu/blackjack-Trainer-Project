@@ -72,7 +72,14 @@ namespace BlackjackOOP
 
         public void Flip()
         {
-
+            if (isFaceDown)
+            {
+                isFaceDown = false;
+            }
+            else if (!isFaceDown)
+            {
+                isFaceDown = true;
+            }
         }
 
         public override string ToString()

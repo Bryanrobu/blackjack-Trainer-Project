@@ -9,14 +9,19 @@ namespace BlackjackOOP
 
         private Deck deck;
         private int currentIndex = 0;
+        private int huidigeSpelerIndex = 0;
         private int mistakes = 0;
+        private int uitgedeeldeStartkaarten = 0;
+        private List<Player> actieveSpelers = new List<Player>();
 
         public enum gameState
         {
             SETUP,
             START,
             SHUFFLED,
-            ROUND
+            STARTCARD,
+            ASKED,
+            MOVE
         }
         public static gameState currentState = gameState.SETUP;
 
@@ -32,6 +37,43 @@ namespace BlackjackOOP
             label2.Text = "Players: " + spelers;
             label3.Text = currentState.ToString();
             label4.Text = "mistakes: " + mistakes.ToString();
+            for (int i = 1; i <= spelers; i++)
+            {
+                Player nieuweSpeler = new Player("Speler " + i);
+                actieveSpelers.Add(nieuweSpeler);
+
+                ToolStripMenuItem spelerMenu = new ToolStripMenuItem(nieuweSpeler.Name);
+
+                ToolStripMenuItem deelItem = new ToolStripMenuItem("Ontvang startkaart");
+                ToolStripMenuItem hitItem = new ToolStripMenuItem("Hit");
+                ToolStripMenuItem standItem = new ToolStripMenuItem("Stand");
+                ToolStripMenuItem actieItem = new ToolStripMenuItem("Vraag actie");
+                ToolStripMenuItem bustItem = new ToolStripMenuItem("Bust");
+                ToolStripMenuItem scoreItem = new ToolStripMenuItem("Bekijk score");
+
+                deelItem.Tag = nieuweSpeler;
+                hitItem.Tag = nieuweSpeler;
+                standItem.Tag = nieuweSpeler;
+                actieItem.Tag = nieuweSpeler;
+                bustItem.Tag = nieuweSpeler;
+                scoreItem.Tag = nieuweSpeler;
+
+                deelItem.Click += PlayerMenuItem_Click;
+                hitItem.Click += PlayerMenuItem_Click;
+                standItem.Click += PlayerMenuItem_Click;
+                actieItem.Click += PlayerMenuItem_Click;
+                bustItem.Click += PlayerMenuItem_Click;
+                scoreItem.Click += ScoreItem_Click;
+
+                spelerMenu.DropDownItems.Add(deelItem);
+                spelerMenu.DropDownItems.Add(hitItem);
+                spelerMenu.DropDownItems.Add(standItem);
+                spelerMenu.DropDownItems.Add(actieItem);
+                spelerMenu.DropDownItems.Add(bustItem);
+                spelerMenu.DropDownItems.Add(scoreItem);
+
+                menuStrip1.Items.Add(spelerMenu);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -61,7 +103,7 @@ namespace BlackjackOOP
                 case gameState.SHUFFLED:
                     currentIndex++;
                     break;
-                case gameState.START:
+                default:
                     mistakes++;
                     break;
             }
@@ -77,7 +119,8 @@ namespace BlackjackOOP
 
         private void button2_Click(object sender, EventArgs e)
         {
-            switch(currentState) {
+            switch (currentState)
+            {
                 case gameState.START:
                     currentState = gameState.SHUFFLED;
                     break;
@@ -91,7 +134,7 @@ namespace BlackjackOOP
         {
             switch (currentState)
             {
-                case gameState.SHUFFLED:
+                default:
                     currentState = gameState.START;
                     break;
 
@@ -99,6 +142,157 @@ namespace BlackjackOOP
             deck = new Deck();
             currentIndex = 0;
             UpdateDisplay();
+        }
+
+        private void PlayerMenuItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
+            Player geselecteerdeSpeler = (Player)clickedItem.Tag;
+            string actie = clickedItem.Text;
+
+            if (huidigeSpelerIndex >= actieveSpelers.Count)
+            {
+                MessageBox.Show("Je hebt alle spelers gehad");
+                mistakes++;
+                UpdateDisplay();
+                return;
+            }
+
+            if (actie != "Ontvang startkaart")
+            {
+                if (huidigeSpelerIndex >= actieveSpelers.Count)
+                {
+                    mistakes++;
+                    UpdateDisplay();
+                    MessageBox.Show("Je hebt alle spelers gehad");
+                    return;
+                }
+
+                if (geselecteerdeSpeler != actieveSpelers[huidigeSpelerIndex])
+                {
+                    mistakes++;
+                    UpdateDisplay();
+                    return;
+                }
+            }
+
+            switch (actie)
+            {
+                case "Ontvang startkaart":
+                    int totaalPersonen = actieveSpelers.Count;
+                    int wieIsAanDeBeurt = uitgedeeldeStartkaarten % totaalPersonen;
+
+                    if (uitgedeeldeStartkaarten >= totaalPersonen * 2)
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                        return;
+                    }
+
+                    if (wieIsAanDeBeurt >= actieveSpelers.Count || geselecteerdeSpeler != actieveSpelers[wieIsAanDeBeurt])
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                        return;
+                    }
+
+                    geselecteerdeSpeler.ReceiveCard(deck.cards[currentIndex]);
+                    currentIndex++;
+                    uitgedeeldeStartkaarten++;
+
+                    MessageBox.Show($"{geselecteerdeSpeler.Name} heeft een startkaart ontvangen.");
+                    if (uitgedeeldeStartkaarten >= totaalPersonen * 2)
+                    {
+                        currentState = gameState.STARTCARD;
+                    }
+                    UpdateDisplay();
+                    break;
+
+                case "Vraag actie":
+                    switch (currentState)
+                    {
+
+                        case gameState.MOVE:
+                        case gameState.STARTCARD:
+                            currentState = gameState.ASKED;
+                            UpdateDisplay();
+                            break;
+
+                        default:
+                            mistakes++;
+                            UpdateDisplay();
+                            return;
+                    }
+                    string advies = geselecteerdeSpeler.GetMoveOpinion();
+                    MessageBox.Show($"{geselecteerdeSpeler.Name} wilt: {advies}");
+                    break;
+
+                case "Hit":
+                    if (currentState != gameState.ASKED || geselecteerdeSpeler.GetMoveOpinion() != "Hit")
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                        return;
+                    }
+                    if (deck != null && currentIndex < deck.cards.Count)
+                    {
+                        if (currentState == gameState.ASKED)
+                        {
+                            currentState = gameState.MOVE;
+                        }
+                        Card kaart = deck.cards[currentIndex];
+                        geselecteerdeSpeler.ReceiveCard(kaart);
+                        currentIndex++;
+                        UpdateDisplay();
+                        MessageBox.Show($"{geselecteerdeSpeler.Name} hit en krijgt: {kaart}\nTotaal nu: {geselecteerdeSpeler.GetCurrentHandValue()}");
+                    }
+                    break;
+
+                case "Stand":
+                    if (currentState != gameState.ASKED || geselecteerdeSpeler.GetMoveOpinion() != "Stand")
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                        return;
+                    }
+                    if (currentState == gameState.ASKED)
+                    {
+                        currentState = gameState.MOVE;
+                        UpdateDisplay();
+                    }
+                    MessageBox.Show($"{geselecteerdeSpeler.Name} blijft staan op {geselecteerdeSpeler.GetCurrentHandValue()}.");
+                    huidigeSpelerIndex++;
+                    break;
+
+                case "Bust":
+                    if (geselecteerdeSpeler.GetCurrentHandValue() <= 21)
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                        return;
+                    }
+                    switch (currentState)
+                    {
+                        case gameState.MOVE:
+                            break;
+                        default:
+                            mistakes++;
+                            UpdateDisplay();
+                            return;
+                    }
+                    MessageBox.Show($"{geselecteerdeSpeler.Name} is nu bust met {geselecteerdeSpeler.GetCurrentHandValue()}.");
+                    huidigeSpelerIndex++;
+                    break;
+            }
+        }
+        private void ScoreItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
+            Player geselecteerdeSpeler = (Player)clickedItem.Tag;
+
+            int huidigeScore = geselecteerdeSpeler.GetCurrentHandValue();
+
+            MessageBox.Show($"De huidige handwaarde van {geselecteerdeSpeler.Name} is: {huidigeScore}");
         }
     }
 }
