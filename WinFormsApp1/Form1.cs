@@ -87,7 +87,7 @@ namespace BlackjackOOP
                 case gameState.SHUFFLED:
                     currentIndex++;
                     break;
-                case gameState.START:
+                default:
                     mistakes++;
                     break;
             }
@@ -134,48 +134,60 @@ namespace BlackjackOOP
             Player geselecteerdeSpeler = (Player)clickedItem.Tag;
             string actie = clickedItem.Text;
 
-            if (actie == "Vraag advies")
+            switch (actie)
             {
-                if (currentState != gameState.SHUFFLED)
-                {
-                    mistakes++;
-                    UpdateDisplay();
-                }
-                if (currentState == gameState.SHUFFLED || currentState == gameState.MOVE) {
-                    currentState = gameState.ASKED;
-                    UpdateDisplay();
-                }
-                string advies = geselecteerdeSpeler.GetMoveOpinion();
-                MessageBox.Show($"{geselecteerdeSpeler.Name} wilt: {advies}");
-            }
-            else if (actie == "Hit")
-            {
-                if (currentState != gameState.ASKED || geselecteerdeSpeler.GetMoveOpinion() != "Hit")
-                {
-                    mistakes++;
-                    UpdateDisplay();
-                }
-                if (deck != null && currentIndex < deck.cards.Count)
-                {
+                case "Vraag advies":
+                    switch (currentState)
+                    {
+
+                        case gameState.MOVE:
+                        case gameState.SHUFFLED:
+                            currentState = gameState.ASKED;
+                            UpdateDisplay();
+                            break;
+
+                        default:
+                            mistakes++;
+                            UpdateDisplay();
+                            break;
+                    }
+                    string advies = geselecteerdeSpeler.GetMoveOpinion();
+                    MessageBox.Show($"{geselecteerdeSpeler.Name} wilt: {advies}");
+                    break;
+
+                case "Hit":
+                    if (currentState != gameState.ASKED || geselecteerdeSpeler.GetMoveOpinion() != "Hit")
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                    }
+                    if (deck != null && currentIndex < deck.cards.Count)
+                    {
+                        if (currentState == gameState.ASKED)
+                        {
+                            currentState = gameState.MOVE;
+                        }
+                        Card kaart = deck.cards[currentIndex];
+                        geselecteerdeSpeler.ReceiveCard(kaart);
+                        currentIndex++;
+                        UpdateDisplay();
+                        MessageBox.Show($"{geselecteerdeSpeler.Name} hit en krijgt: {kaart}\nTotaal nu: {geselecteerdeSpeler.GetCurrentHandValue()}");
+                    }
+                    break;
+                
+                case "Stand":
+                    if (currentState != gameState.ASKED || geselecteerdeSpeler.GetMoveOpinion() != "Stand")
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                    }
                     if (currentState == gameState.ASKED)
                     {
                         currentState = gameState.MOVE;
+                        UpdateDisplay();
                     }
-                    Card kaart = deck.cards[currentIndex];
-                    geselecteerdeSpeler.ReceiveCard(kaart);
-                    currentIndex++;
-                    UpdateDisplay();
-                    MessageBox.Show($"{geselecteerdeSpeler.Name} hit en krijgt: {kaart}\nTotaal nu: {geselecteerdeSpeler.GetCurrentHandValue()}");
-                }
-            }
-            else if (actie == "Stand")
-            {
-                if (currentState != gameState.ASKED || geselecteerdeSpeler.GetMoveOpinion() != "Stand")
-                {
-                    mistakes++;
-                    UpdateDisplay();
-                }
-                MessageBox.Show($"{geselecteerdeSpeler.Name} blijft staan op {geselecteerdeSpeler.GetCurrentHandValue()}.");
+                    MessageBox.Show($"{geselecteerdeSpeler.Name} blijft staan op {geselecteerdeSpeler.GetCurrentHandValue()}.");
+                    break;
             }
         }
     }
