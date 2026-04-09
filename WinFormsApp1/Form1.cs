@@ -136,6 +136,11 @@ namespace BlackjackOOP
 
             if (actie == "Vraag advies")
             {
+                if (currentState != gameState.SHUFFLED)
+                {
+                    mistakes++;
+                    UpdateDisplay();
+                }
                 if (currentState == gameState.SHUFFLED || currentState == gameState.MOVE) {
                     currentState = gameState.ASKED;
                     UpdateDisplay();
