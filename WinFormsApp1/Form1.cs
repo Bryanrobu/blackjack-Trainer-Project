@@ -17,7 +17,8 @@ namespace BlackjackOOP
             SETUP,
             START,
             SHUFFLED,
-            ROUND
+            ASKED,
+            MOVE
         }
         public static gameState currentState = gameState.SETUP;
 
@@ -135,18 +136,26 @@ namespace BlackjackOOP
 
             if (actie == "Vraag advies")
             {
+                if (currentState == gameState.SHUFFLED || currentState == gameState.MOVE) {
+                    currentState = gameState.ASKED;
+                    UpdateDisplay();
+                }
                 string advies = geselecteerdeSpeler.GetMoveOpinion();
                 MessageBox.Show($"{geselecteerdeSpeler.Name} wilt: {advies}");
             }
             else if (actie == "Hit")
             {
-                if (currentState != gameState.SHUFFLED)
+                if (currentState != gameState.ASKED || geselecteerdeSpeler.GetMoveOpinion() != "Hit")
                 {
                     mistakes++;
                     UpdateDisplay();
                 }
                 if (deck != null && currentIndex < deck.cards.Count)
                 {
+                    if (currentState == gameState.ASKED)
+                    {
+                        currentState = gameState.MOVE;
+                    }
                     Card kaart = deck.cards[currentIndex];
                     geselecteerdeSpeler.ReceiveCard(kaart);
                     currentIndex++;
@@ -156,6 +165,11 @@ namespace BlackjackOOP
             }
             else if (actie == "Stand")
             {
+                if (currentState != gameState.ASKED || geselecteerdeSpeler.GetMoveOpinion() != "Stand")
+                {
+                    mistakes++;
+                    UpdateDisplay();
+                }
                 MessageBox.Show($"{geselecteerdeSpeler.Name} blijft staan op {geselecteerdeSpeler.GetCurrentHandValue()}.");
             }
         }
