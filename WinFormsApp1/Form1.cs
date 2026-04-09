@@ -45,21 +45,25 @@ namespace BlackjackOOP
                 ToolStripMenuItem hitItem = new ToolStripMenuItem("Hit");
                 ToolStripMenuItem standItem = new ToolStripMenuItem("Stand");
                 ToolStripMenuItem actieItem = new ToolStripMenuItem("Vraag actie");
+                ToolStripMenuItem bustItem = new ToolStripMenuItem("Bust");
                 ToolStripMenuItem scoreItem = new ToolStripMenuItem("Bekijk score");
 
                 hitItem.Tag = nieuweSpeler;
                 standItem.Tag = nieuweSpeler;
                 actieItem.Tag = nieuweSpeler;
+                bustItem.Tag = nieuweSpeler;
                 scoreItem.Tag = nieuweSpeler;
 
                 hitItem.Click += PlayerMenuItem_Click;
                 standItem.Click += PlayerMenuItem_Click;
                 actieItem.Click += PlayerMenuItem_Click;
+                bustItem.Click += PlayerMenuItem_Click;
                 scoreItem.Click += ScoreItem_Click;
 
                 spelerMenu.DropDownItems.Add(hitItem);
                 spelerMenu.DropDownItems.Add(standItem);
                 spelerMenu.DropDownItems.Add(actieItem);
+                spelerMenu.DropDownItems.Add(bustItem);
                 spelerMenu.DropDownItems.Add(scoreItem);
 
                 menuStrip1.Items.Add(spelerMenu);
@@ -140,6 +144,14 @@ namespace BlackjackOOP
             Player geselecteerdeSpeler = (Player)clickedItem.Tag;
             string actie = clickedItem.Text;
 
+            if (huidigeSpelerIndex >= actieveSpelers.Count)
+            {
+                MessageBox.Show("Je hebt alle spelers gehad");
+                mistakes++;
+                UpdateDisplay();
+                return;
+            }
+
             if (geselecteerdeSpeler != actieveSpelers[huidigeSpelerIndex])
             {
                 mistakes++;
@@ -173,6 +185,7 @@ namespace BlackjackOOP
                     {
                         mistakes++;
                         UpdateDisplay();
+                        return;
                     }
                     if (deck != null && currentIndex < deck.cards.Count)
                     {
@@ -193,6 +206,7 @@ namespace BlackjackOOP
                     {
                         mistakes++;
                         UpdateDisplay();
+                        return;
                     }
                     if (currentState == gameState.ASKED)
                     {
@@ -200,6 +214,26 @@ namespace BlackjackOOP
                         UpdateDisplay();
                     }
                     MessageBox.Show($"{geselecteerdeSpeler.Name} blijft staan op {geselecteerdeSpeler.GetCurrentHandValue()}.");
+                    huidigeSpelerIndex++;
+                    break;
+
+                case "Bust":
+                    if (geselecteerdeSpeler.GetCurrentHandValue() <= 21)
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                        return;
+                    }
+                    switch (currentState)
+                    {
+                        case gameState.MOVE:
+                            break;
+                        default:
+                            mistakes++;
+                            UpdateDisplay();
+                            return;
+                    }
+                    MessageBox.Show($"{geselecteerdeSpeler.Name} is nu bust met {geselecteerdeSpeler.GetCurrentHandValue()}.");
                     huidigeSpelerIndex++;
                     break;
             }
