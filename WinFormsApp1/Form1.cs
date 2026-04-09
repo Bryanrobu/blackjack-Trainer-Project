@@ -44,19 +44,23 @@ namespace BlackjackOOP
 
                 ToolStripMenuItem hitItem = new ToolStripMenuItem("Hit");
                 ToolStripMenuItem standItem = new ToolStripMenuItem("Stand");
-                ToolStripMenuItem adviesItem = new ToolStripMenuItem("Vraag advies");
+                ToolStripMenuItem actieItem = new ToolStripMenuItem("Vraag actie");
+                ToolStripMenuItem scoreItem = new ToolStripMenuItem("Bekijk score");
 
                 hitItem.Tag = nieuweSpeler;
                 standItem.Tag = nieuweSpeler;
-                adviesItem.Tag = nieuweSpeler;
+                actieItem.Tag = nieuweSpeler;
+                scoreItem.Tag = nieuweSpeler;
 
                 hitItem.Click += PlayerMenuItem_Click;
                 standItem.Click += PlayerMenuItem_Click;
-                adviesItem.Click += PlayerMenuItem_Click;
+                actieItem.Click += PlayerMenuItem_Click;
+                scoreItem.Click += ScoreItem_Click;
 
                 spelerMenu.DropDownItems.Add(hitItem);
                 spelerMenu.DropDownItems.Add(standItem);
-                spelerMenu.DropDownItems.Add(adviesItem);
+                spelerMenu.DropDownItems.Add(actieItem);
+                spelerMenu.DropDownItems.Add(scoreItem);
 
                 menuStrip1.Items.Add(spelerMenu);
             }
@@ -140,13 +144,12 @@ namespace BlackjackOOP
             {
                 mistakes++;
                 UpdateDisplay();
-
                 return;
             }
 
             switch (actie)
             {
-                case "Vraag advies":
+                case "Vraag actie":
                     switch (currentState)
                     {
 
@@ -200,6 +203,15 @@ namespace BlackjackOOP
                     huidigeSpelerIndex++;
                     break;
             }
+        }
+        private void ScoreItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
+            Player geselecteerdeSpeler = (Player)clickedItem.Tag;
+
+            int huidigeScore = geselecteerdeSpeler.GetCurrentHandValue();
+
+            MessageBox.Show($"De huidige handwaarde van {geselecteerdeSpeler.Name} is: {huidigeScore}");
         }
     }
 }
