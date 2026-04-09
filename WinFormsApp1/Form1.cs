@@ -11,6 +11,7 @@ namespace BlackjackOOP
         private int currentIndex = 0;
         private int huidigeSpelerIndex = 0;
         private int mistakes = 0;
+        private int uitgedeeldeStartkaarten = 0;
         private List<Player> actieveSpelers = new List<Player>();
 
         public enum gameState
@@ -18,6 +19,7 @@ namespace BlackjackOOP
             SETUP,
             START,
             SHUFFLED,
+            STARTCARD,
             ASKED,
             MOVE
         }
@@ -42,24 +44,28 @@ namespace BlackjackOOP
 
                 ToolStripMenuItem spelerMenu = new ToolStripMenuItem(nieuweSpeler.Name);
 
+                ToolStripMenuItem deelItem = new ToolStripMenuItem("Ontvang startkaart");
                 ToolStripMenuItem hitItem = new ToolStripMenuItem("Hit");
                 ToolStripMenuItem standItem = new ToolStripMenuItem("Stand");
                 ToolStripMenuItem actieItem = new ToolStripMenuItem("Vraag actie");
                 ToolStripMenuItem bustItem = new ToolStripMenuItem("Bust");
                 ToolStripMenuItem scoreItem = new ToolStripMenuItem("Bekijk score");
 
+                deelItem.Tag = nieuweSpeler;
                 hitItem.Tag = nieuweSpeler;
                 standItem.Tag = nieuweSpeler;
                 actieItem.Tag = nieuweSpeler;
                 bustItem.Tag = nieuweSpeler;
                 scoreItem.Tag = nieuweSpeler;
 
+                deelItem.Click += PlayerMenuItem_Click;
                 hitItem.Click += PlayerMenuItem_Click;
                 standItem.Click += PlayerMenuItem_Click;
                 actieItem.Click += PlayerMenuItem_Click;
                 bustItem.Click += PlayerMenuItem_Click;
                 scoreItem.Click += ScoreItem_Click;
 
+                spelerMenu.DropDownItems.Add(deelItem);
                 spelerMenu.DropDownItems.Add(hitItem);
                 spelerMenu.DropDownItems.Add(standItem);
                 spelerMenu.DropDownItems.Add(actieItem);
@@ -128,7 +134,7 @@ namespace BlackjackOOP
         {
             switch (currentState)
             {
-                case gameState.SHUFFLED:
+                default:
                     currentState = gameState.START;
                     break;
 
@@ -152,21 +158,62 @@ namespace BlackjackOOP
                 return;
             }
 
-            if (geselecteerdeSpeler != actieveSpelers[huidigeSpelerIndex])
+            if (actie != "Ontvang startkaart")
             {
-                mistakes++;
-                UpdateDisplay();
-                return;
+                if (huidigeSpelerIndex >= actieveSpelers.Count)
+                {
+                    mistakes++;
+                    UpdateDisplay();
+                    MessageBox.Show("Je hebt alle spelers gehad");
+                    return;
+                }
+
+                if (geselecteerdeSpeler != actieveSpelers[huidigeSpelerIndex])
+                {
+                    mistakes++;
+                    UpdateDisplay();
+                    return;
+                }
             }
 
             switch (actie)
             {
+                case "Ontvang startkaart":
+                    int totaalPersonen = actieveSpelers.Count;
+                    int wieIsAanDeBeurt = uitgedeeldeStartkaarten % totaalPersonen;
+
+                    if (uitgedeeldeStartkaarten >= totaalPersonen * 2)
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                        return;
+                    }
+
+                    if (wieIsAanDeBeurt >= actieveSpelers.Count || geselecteerdeSpeler != actieveSpelers[wieIsAanDeBeurt])
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                        return;
+                    }
+
+                    geselecteerdeSpeler.ReceiveCard(deck.cards[currentIndex]);
+                    currentIndex++;
+                    uitgedeeldeStartkaarten++;
+
+                    MessageBox.Show($"{geselecteerdeSpeler.Name} heeft een startkaart ontvangen.");
+                    if (uitgedeeldeStartkaarten >= totaalPersonen * 2)
+                    {
+                        currentState = gameState.STARTCARD;
+                    }
+                    UpdateDisplay();
+                    break;
+
                 case "Vraag actie":
                     switch (currentState)
                     {
 
                         case gameState.MOVE:
-                        case gameState.SHUFFLED:
+                        case gameState.STARTCARD:
                             currentState = gameState.ASKED;
                             UpdateDisplay();
                             break;
@@ -174,7 +221,7 @@ namespace BlackjackOOP
                         default:
                             mistakes++;
                             UpdateDisplay();
-                            break;
+                            return;
                     }
                     string advies = geselecteerdeSpeler.GetMoveOpinion();
                     MessageBox.Show($"{geselecteerdeSpeler.Name} wilt: {advies}");
@@ -200,7 +247,7 @@ namespace BlackjackOOP
                         MessageBox.Show($"{geselecteerdeSpeler.Name} hit en krijgt: {kaart}\nTotaal nu: {geselecteerdeSpeler.GetCurrentHandValue()}");
                     }
                     break;
-                
+
                 case "Stand":
                     if (currentState != gameState.ASKED || geselecteerdeSpeler.GetMoveOpinion() != "Stand")
                     {
