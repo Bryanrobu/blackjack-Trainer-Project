@@ -48,7 +48,7 @@ namespace BlackjackOOP
                 switch (rank)
                 {
                     case Rank.ACE:
-                        value = (int)Rank.ACE;
+                        value = 11;
                         break;
                     case Rank.JACK:
                     case Rank.QUEEN:

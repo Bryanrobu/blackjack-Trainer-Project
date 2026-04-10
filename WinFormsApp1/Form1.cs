@@ -49,7 +49,7 @@ namespace BlackjackOOP
                 ToolStripMenuItem standItem = new ToolStripMenuItem("Stand");
                 ToolStripMenuItem actieItem = new ToolStripMenuItem("Vraag actie");
                 ToolStripMenuItem bustItem = new ToolStripMenuItem("Bust");
-                ToolStripMenuItem scoreItem = new ToolStripMenuItem("Bekijk score");
+                ToolStripMenuItem scoreItem = new ToolStripMenuItem("Bekijk Kaarten");
 
                 deelItem.Tag = nieuweSpeler;
                 hitItem.Tag = nieuweSpeler;
@@ -161,6 +161,12 @@ namespace BlackjackOOP
         private void PlayerMenuItem_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
+
+            if (clickedItem.HasDropDownItems)
+            {
+                return;
+            }
+
             Player geselecteerdeSpeler = (Player)clickedItem.Tag;
             string actie = clickedItem.Text;
 
@@ -186,6 +192,7 @@ namespace BlackjackOOP
                 {
                     mistakes++;
                     UpdateDisplay();
+                    MessageBox.Show("Deze speler is niet aan de beurt");
                     return;
                 }
             }
@@ -201,6 +208,7 @@ namespace BlackjackOOP
                         default:
                             mistakes++;
                             UpdateDisplay();
+                            MessageBox.Show("Je moet je deck eerst schudden");
                             return;
                     }
 
@@ -211,6 +219,7 @@ namespace BlackjackOOP
                     {
                         mistakes++;
                         UpdateDisplay();
+                        MessageBox.Show("Alle startkaarten zijn al uitgedeeld");
                         return;
                     }
 
@@ -218,6 +227,7 @@ namespace BlackjackOOP
                     {
                         mistakes++;
                         UpdateDisplay();
+                        MessageBox.Show("Deze speler is niet aan de beurt");
                         return;
                     }
 
@@ -244,20 +254,35 @@ namespace BlackjackOOP
                             UpdateDisplay();
                             break;
 
+                        case gameState.ASKED:
+                            mistakes++;
+                            UpdateDisplay();
+                            MessageBox.Show("Je hebt al om advies gevraagd..");
+                            return;
+
                         default:
                             mistakes++;
                             UpdateDisplay();
+                            MessageBox.Show("Je mag pas om advies vragen als alle spelers hun startkaarten hebben ontvangen.");
                             return;
                     }
-                    string advies = geselecteerdeSpeler.GetMoveOpinion();
+                    string advies = geselecteerdeSpeler.getOpinion();
                     MessageBox.Show($"{geselecteerdeSpeler.Name} wilt: {advies}");
                     break;
 
                 case "Hit":
-                    if (currentState != gameState.ASKED || geselecteerdeSpeler.GetMoveOpinion() != "Hit")
+                    if (currentState != gameState.ASKED)
                     {
                         mistakes++;
                         UpdateDisplay();
+                        MessageBox.Show("Je moet eerst om advies vragen voordat je mag Hitten.");
+                        return;
+                    }
+                    if (geselecteerdeSpeler.LaatsteMening != "Hit")
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                        MessageBox.Show("de speler wilde 'Stand', niet 'Hit'.");
                         return;
                     }
                     if (deck != null && currentIndex < deck.cards.Count)
@@ -270,15 +295,23 @@ namespace BlackjackOOP
                         geselecteerdeSpeler.ReceiveCard(kaart);
                         currentIndex++;
                         UpdateDisplay();
-                        MessageBox.Show($"{geselecteerdeSpeler.Name} hit en krijgt: {kaart}\nTotaal nu: {geselecteerdeSpeler.GetCurrentHandValue()}");
+                        MessageBox.Show($"{geselecteerdeSpeler.Name} hit en krijgt: {kaart}");
                     }
                     break;
 
                 case "Stand":
-                    if (currentState != gameState.ASKED || geselecteerdeSpeler.GetMoveOpinion() != "Stand")
+                    if (currentState != gameState.ASKED)
                     {
                         mistakes++;
                         UpdateDisplay();
+                        MessageBox.Show("Je moet eerst om advies vragen voordat je mag Standen.");
+                        return;
+                    }
+                    if (geselecteerdeSpeler.LaatsteMening != "Stand")
+                    {
+                        mistakes++;
+                        UpdateDisplay();
+                        MessageBox.Show("de speler wilde 'Hit', niet 'Stand'.");
                         return;
                     }
                     if (currentState == gameState.ASKED)
@@ -297,6 +330,7 @@ namespace BlackjackOOP
                     {
                         mistakes++;
                         UpdateDisplay();
+                        MessageBox.Show("Deze persoon is nog niet boven de 21.");
                         return;
                     }
                     switch (currentState)
@@ -306,6 +340,7 @@ namespace BlackjackOOP
                         default:
                             mistakes++;
                             UpdateDisplay();
+                            MessageBox.Show("je mag nu niet busten");
                             return;
                     }
                     clickedItem.OwnerItem.Tag = "Bust!";
@@ -320,9 +355,19 @@ namespace BlackjackOOP
             ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
             Player geselecteerdeSpeler = (Player)clickedItem.Tag;
 
-            int huidigeScore = geselecteerdeSpeler.GetCurrentHandValue();
+            string kaartenOverzicht = "";
 
-            MessageBox.Show($"De huidige handwaarde van {geselecteerdeSpeler.Name} is: {huidigeScore}");
+            foreach (var kaart in geselecteerdeSpeler.Hand)
+            {
+                kaartenOverzicht += kaart.ToString() + "\n";
+            }
+
+            if (string.IsNullOrEmpty(kaartenOverzicht))
+            {
+                kaartenOverzicht = "Geen kaarten in hand.";
+            }
+
+            MessageBox.Show($"Kaarten van {geselecteerdeSpeler.Name}:\n\n{kaartenOverzicht}\nTotale score: {geselecteerdeSpeler.GetCurrentHandValue()}");
         }
     }
 }
