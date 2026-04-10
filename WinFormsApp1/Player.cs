@@ -9,6 +9,14 @@ namespace BlackjackOOP
         public string Name { get; set; }
         public List<Card> Hand { get; private set; } = new List<Card>();
 
+        public string LaatsteMening { get; private set; }
+
+        public string getOpinion()
+        {
+            LaatsteMening = GetMoveOpinion();
+            return LaatsteMening;
+        }
+
         private static Random _random = new Random();
 
         public Player(string name)
@@ -21,17 +29,27 @@ namespace BlackjackOOP
         }
         public int GetCurrentHandValue()
         {
-            return Hand.Sum(card => card.Value);
+            int totaal = Hand.Sum(card => card.Value);
+
+            int aantalAzen = Hand.Count(card => card.Value == 11);
+
+            while (totaal > 21 && aantalAzen > 0)
+            {
+                totaal -= 10;
+                aantalAzen--;
+            }
+
+            return totaal;
         }
 
         public string GetMoveOpinion()
         {
             int total = GetCurrentHandValue();
 
-            if (total < 12) return "Hit";
+            if (total < 11) return "Hit";
             if (total > 18) return "Stand";
 
-            return _random.Next(0, 2) == 0 ? "Hit" : "Stand";
+            return _random.Next(0, 100) < 40 ? "Hit" : "Stand";
         }
 
         public string ShowHand()
