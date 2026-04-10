@@ -34,13 +34,14 @@ namespace BlackjackOOP
             button1 = new Button();
             numericUpDownPlayers = new NumericUpDown();
             label1 = new Label();
+            label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)numericUpDownPlayers).BeginInit();
             SuspendLayout();
             // 
             // button1
             // 
             button1.Anchor = AnchorStyles.None;
-            button1.Location = new Point(285, 201);
+            button1.Location = new Point(342, 196);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 0;
@@ -51,7 +52,7 @@ namespace BlackjackOOP
             // numericUpDownPlayers
             // 
             numericUpDownPlayers.Anchor = AnchorStyles.None;
-            numericUpDownPlayers.Location = new Point(366, 201);
+            numericUpDownPlayers.Location = new Point(320, 149);
             numericUpDownPlayers.Name = "numericUpDownPlayers";
             numericUpDownPlayers.Size = new Size(120, 23);
             numericUpDownPlayers.TabIndex = 1;
@@ -66,11 +67,21 @@ namespace BlackjackOOP
             label1.TabIndex = 2;
             label1.Text = "label1";
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(303, 131);
+            label2.Name = "label2";
+            label2.Size = new Size(157, 15);
+            label2.TabIndex = 3;
+            label2.Text = "Select the amount of players";
+            // 
             // StartScreen
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(numericUpDownPlayers);
             Controls.Add(button1);
@@ -86,5 +97,6 @@ namespace BlackjackOOP
         private Button button1;
         private NumericUpDown numericUpDownPlayers;
         private Label label1;
+        private Label label2;
     }
 }
