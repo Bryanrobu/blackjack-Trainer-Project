@@ -69,6 +69,7 @@ namespace BlackjackOOP
             // 
             // label2
             // 
+            label2.Anchor = AnchorStyles.None;
             label2.AutoSize = true;
             label2.Location = new Point(265, 131);
             label2.Name = "label2";

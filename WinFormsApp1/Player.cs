@@ -11,6 +11,8 @@ namespace BlackjackOOP
 
         public string LaatsteMening { get; private set; }
 
+        public string Status { get; set; } = "Bezig";
+
         public string getOpinion()
         {
             LaatsteMening = GetMoveOpinion();

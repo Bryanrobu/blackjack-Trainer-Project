@@ -424,7 +424,8 @@ namespace BlackjackOOP
             if (clickedItem.OwnerItem is ToolStripMenuItem spelerHoofdMenu)
             {
                 spelerHoofdMenu.Tag = resultaat;
-                    UpdateDisplay();
+                geselecteerdeSpeler.Status = resultaat;
+                UpdateDisplay();
             }
         }
         private void RegisterMistake(string message)
@@ -479,6 +480,25 @@ namespace BlackjackOOP
             }
 
             return true;
+        }
+        private void btnStats_Click(object sender, EventArgs e)
+        {
+            StatsForm stats = new StatsForm(actieveSpelers, mistakes);
+
+            stats.StartPosition = FormStartPosition.Manual;
+            stats.Location = this.Location;
+            stats.Size = this.Size;
+
+            DialogResult result = stats.ShowDialog();
+            if (result == DialogResult.Retry)
+            {
+                Application.Restart();
+            }
+
+            if (result == DialogResult.Abort)
+            {
+                Application.Exit();
+            }
         }
     }
 }
