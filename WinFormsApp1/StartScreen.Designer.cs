@@ -70,11 +70,11 @@ namespace BlackjackOOP
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(303, 131);
+            label2.Location = new Point(265, 131);
             label2.Name = "label2";
-            label2.Size = new Size(157, 15);
+            label2.Size = new Size(232, 15);
             label2.TabIndex = 3;
-            label2.Text = "Select the amount of players";
+            label2.Text = "Select the amount of players (min 1 max 4)";
             // 
             // StartScreen
             // 

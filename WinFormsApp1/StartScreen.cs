@@ -12,10 +12,17 @@ namespace BlackjackOOP
             this.StartPosition = FormStartPosition.CenterScreen;
             button1.Text = "Start Game";
             label1.Text = Form1.currentState.ToString();
+            numericUpDownPlayers.Minimum = 1;
+            numericUpDownPlayers.Maximum = 4;
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
+            if (NumberOfPlayers < 1 || NumberOfPlayers > 4)
+            {
+                MessageBox.Show("Kies a.u.b. een aantal spelers tussen de 1 en 4.");
+                return;
+            }
             switch (Form1.currentState)
             {
                 case Form1.gameState.SETUP:
