@@ -40,6 +40,7 @@ namespace BlackjackOOP
             label4 = new Label();
             folderBrowserDialog1 = new FolderBrowserDialog();
             menuStrip1 = new MenuStrip();
+            button4 = new Button();
             SuspendLayout();
             // 
             // label1
@@ -113,17 +114,29 @@ namespace BlackjackOOP
             // 
             menuStrip1.BackColor = SystemColors.ControlLight;
             menuStrip1.Dock = DockStyle.Right;
-            menuStrip1.Location = new Point(677, 0);
+            menuStrip1.Location = new Point(773, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(126, 450);
+            menuStrip1.Size = new Size(30, 450);
             menuStrip1.TabIndex = 8;
             menuStrip1.Text = "menuStrip1";
+            // 
+            // button4
+            // 
+            button4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            button4.Location = new Point(12, 400);
+            button4.Name = "button4";
+            button4.Size = new Size(75, 23);
+            button4.TabIndex = 9;
+            button4.Text = "Stats";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += btnStats_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(803, 450);
+            Controls.Add(button4);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -151,5 +164,6 @@ namespace BlackjackOOP
         private Label label4;
         private FolderBrowserDialog folderBrowserDialog1;
         private MenuStrip menuStrip1;
+        private Button button4;
     }
 }
