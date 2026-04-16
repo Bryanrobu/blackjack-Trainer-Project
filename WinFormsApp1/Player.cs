@@ -42,14 +42,14 @@ namespace BlackjackOOP
             return totaal;
         }
 
-        public string GetMoveOpinion()
+        public virtual string GetMoveOpinion()
         {
             int total = GetCurrentHandValue();
 
-            if (total < 11) return "Hit";
+            if (total < 14) return "Hit";
             if (total > 18) return "Stand";
 
-            return _random.Next(0, 100) < 40 ? "Hit" : "Stand";
+            return _random.Next(0, 100) < 50 ? "Hit" : "Stand";
         }
 
         public string ShowHand()
