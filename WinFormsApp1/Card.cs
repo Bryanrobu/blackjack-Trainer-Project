@@ -38,7 +38,7 @@ namespace BlackjackOOP
         private Rank rank;
         private int value;
         private Suit suit;
-        private bool isFaceDown;
+        private bool isDownCard;
 
         public int Value
         {
@@ -72,19 +72,26 @@ namespace BlackjackOOP
 
         public void Flip()
         {
-            if (isFaceDown)
+            if (isDownCard)
             {
-                isFaceDown = false;
+                isDownCard = false;
             }
-            else if (!isFaceDown)
+            else if (!isDownCard)
             {
-                isFaceDown = true;
+                isDownCard = true;
             }
         }
 
         public override string ToString()
         {
-            return rank.ToString() + " OF " + suit.ToString();
+            string cardText = rank.ToString() + " OF " + suit.ToString();
+
+            if (isDownCard)
+            {
+                return cardText + " (DownCard)";
+            }
+
+            return cardText;
         }
     }
 }

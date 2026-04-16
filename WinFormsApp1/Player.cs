@@ -56,5 +56,10 @@ namespace BlackjackOOP
         {
             return string.Join(", ", Hand);
         }
+
+        public bool IsBust()
+        {
+            return GetCurrentHandValue() > 21;
+        }
     }
 }

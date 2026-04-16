@@ -18,6 +18,7 @@ namespace BlackjackOOP
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
+            NumberOfPlayers = (int)numericUpDownPlayers.Value;
             if (NumberOfPlayers < 1 || NumberOfPlayers > 4)
             {
                 MessageBox.Show("Kies a.u.b. een aantal spelers tussen de 1 en 4.");
@@ -29,7 +30,6 @@ namespace BlackjackOOP
                     Form1.currentState = Form1.gameState.START;
                     break;
             }
-            NumberOfPlayers = (int)numericUpDownPlayers.Value;
             this.DialogResult = DialogResult.OK;
             this.Close();
         }

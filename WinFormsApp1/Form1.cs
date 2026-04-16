@@ -1,3 +1,5 @@
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
 namespace BlackjackOOP
 {
     public partial class Form1 : Form
@@ -48,7 +50,8 @@ namespace BlackjackOOP
 
             ToolStripMenuItem spelerMenu = new ToolStripMenuItem(nieuweSpeler.Name);
 
-            ToolStripMenuItem deelItem = new ToolStripMenuItem("Ontvang startkaart");
+            ToolStripMenuItem deelItem = new ToolStripMenuItem("Geef Startkaart");
+            ToolStripMenuItem downcardItem = new ToolStripMenuItem("Geef Downcard");
             ToolStripMenuItem hitItem = new ToolStripMenuItem("Hit");
             ToolStripMenuItem standItem = new ToolStripMenuItem("Stand");
             ToolStripMenuItem actieItem = new ToolStripMenuItem("Vraag actie");
@@ -56,6 +59,7 @@ namespace BlackjackOOP
             ToolStripMenuItem scoreItem = new ToolStripMenuItem("Bekijk Kaarten");
 
             deelItem.Tag = nieuweSpeler;
+            downcardItem.Tag = nieuweSpeler;
             hitItem.Tag = nieuweSpeler;
             standItem.Tag = nieuweSpeler;
             actieItem.Tag = nieuweSpeler;
@@ -63,6 +67,7 @@ namespace BlackjackOOP
             scoreItem.Tag = nieuweSpeler;
 
             deelItem.Click += PlayerMenuItem_Click;
+            downcardItem.Click += PlayerMenuItem_Click;
             hitItem.Click += PlayerMenuItem_Click;
             standItem.Click += PlayerMenuItem_Click;
             actieItem.Click += PlayerMenuItem_Click;
@@ -70,12 +75,15 @@ namespace BlackjackOOP
             scoreItem.Click += ScoreItem_Click;
 
             spelerMenu.DropDownItems.AddRange(new ToolStripItem[] {
-                deelItem, hitItem, standItem, actieItem, bustItem, scoreItem
+                deelItem, downcardItem, hitItem, standItem, actieItem, bustItem, scoreItem
             });
 
             if (nieuweSpeler is Dealer)
             {
                 actieItem.Visible = false;
+            } else
+            {
+                downcardItem.Visible = false;
             }
 
             menuStrip1.Items.Add(spelerMenu);
@@ -167,6 +175,7 @@ namespace BlackjackOOP
 
             Player geselecteerdeSpeler = (Player)clickedItem.Tag;
             string actie = clickedItem.Text;
+            Dealer dealer = geselecteerdeSpeler as Dealer;
 
             if (huidigeSpelerIndex >= actieveSpelers.Count)
             {
@@ -174,8 +183,13 @@ namespace BlackjackOOP
                 return;
             }
 
-            if (actie != "Ontvang startkaart")
+            if (actie != "Geef Startkaart" && actie != "Geef Downcard")
             {
+                if (currentState == gameState.START || currentState == gameState.SHUFFLED)
+                {
+                    RegisterMistake("De startkaarten moeten eerst worden uitgedeeld voordat je deze actie mag doen.");
+                    return;
+                }
 
                 if (geselecteerdeSpeler != actieveSpelers[huidigeSpelerIndex])
                 {
@@ -186,43 +200,43 @@ namespace BlackjackOOP
 
             switch (actie)
             {
-                case "Ontvang startkaart":
-                    switch (currentState)
+                case "Geef Startkaart":
+                    if (dealer != null && dealer.HeeftDowncardNodig())
                     {
-                        case gameState.SHUFFLED:
-                            break;
-
-                        default:
-                            RegisterMistake("Je moet je deck eerst shuffelen.");
-                            return;
-                    }
-
-                    int totaalPersonen = actieveSpelers.Count;
-                    int wieIsAanDeBeurt = uitgedeeldeStartkaarten % totaalPersonen;
-
-                    if (uitgedeeldeStartkaarten >= totaalPersonen * 2)
-                    {
-                        RegisterMistake("Alle startkaarten zijn al uitgedeeld.");
+                        RegisterMistake("De tweede kaart van de dealer moet gesloten zijn! Gebruik de 'Geef Downcard' knop.");
                         return;
                     }
 
-                    if (wieIsAanDeBeurt >= actieveSpelers.Count || geselecteerdeSpeler != actieveSpelers[wieIsAanDeBeurt])
+                    if (MagStartkaartOntvangen(geselecteerdeSpeler))
                     {
-                        RegisterMistake("Deze speler is niet aan de beurt.");
+                        geselecteerdeSpeler.ReceiveCard(deck.cards[currentIndex]);
+                        currentIndex++;
+                        UpdateDisplay();
+                        MessageBox.Show($"{geselecteerdeSpeler.Name} heeft een startkaart ontvangen.");
+                    }
+                    break;
+
+                case "Geef Downcard":
+                    if (dealer == null)
+                    {
+                        RegisterMistake("Alleen de dealer kan een Downcard ontvangen.");
+                        return;
+                    }
+                    if (!dealer.HeeftDowncardNodig())
+                    {
+                        RegisterMistake("De dealer moet eerst 1 open kaart hebben, of heeft beide kaarten al.");
                         return;
                     }
 
-                    geselecteerdeSpeler.ReceiveCard(deck.cards[currentIndex]);
-                    currentIndex++;
-                    uitgedeeldeStartkaarten++;
-
-                    if (uitgedeeldeStartkaarten >= totaalPersonen * 2)
+                    if (MagStartkaartOntvangen(geselecteerdeSpeler))
                     {
-                        currentState = gameState.STARTCARD;
+                        Card downCard = deck.cards[currentIndex];
+                        downCard.Flip();
+                        geselecteerdeSpeler.ReceiveCard(downCard);
+                        currentIndex++;
+                        UpdateDisplay();
+                        MessageBox.Show("De dealer heeft een Downcard (gesloten kaart) ontvangen.");
                     }
-
-                    UpdateDisplay();
-                    MessageBox.Show($"{geselecteerdeSpeler.Name} heeft een startkaart ontvangen.");
                     break;
 
                 case "Vraag actie":
@@ -248,8 +262,7 @@ namespace BlackjackOOP
                     break;
 
                 case "Hit":
-                    bool isDealerHit = geselecteerdeSpeler is Dealer;
-                    if (isDealerHit)
+                    if (dealer != null)
                     {
                         geselecteerdeSpeler.getOpinion();
 
@@ -261,12 +274,12 @@ namespace BlackjackOOP
 
                         currentState = gameState.ASKED;
                     }
-                    if (!isDealerHit && currentState != gameState.ASKED)
+                    if (dealer == null && currentState != gameState.ASKED)
                     {
                         RegisterMistake("Je moet eerst om advies vragen voordat je mag Hitten.");
                         return;
                     }
-                    if (!isDealerHit && geselecteerdeSpeler.LaatsteMening != "Hit")
+                    if (dealer == null && geselecteerdeSpeler.LaatsteMening != "Hit")
                     {
                         RegisterMistake ("de speler wilde 'Stand', niet 'Hit'.");
                         return;
@@ -287,15 +300,13 @@ namespace BlackjackOOP
 
                 case "Stand":
 
-                    if (geselecteerdeSpeler.GetCurrentHandValue() > 21)
+                    if (geselecteerdeSpeler.IsBust())
                     {
                         RegisterMistake("Je hebt meer dan 21 punten, dus je moet bust kiezen");
                         return;
                     }
 
-                    bool isDealerStand = geselecteerdeSpeler is Dealer;
-
-                    if (isDealerStand)
+                    if (dealer != null)
                     {
                         geselecteerdeSpeler.getOpinion();
 
@@ -307,12 +318,12 @@ namespace BlackjackOOP
 
                         currentState = gameState.ASKED;
                     }
-                    if (!isDealerStand && currentState != gameState.ASKED)
+                    if (dealer == null && currentState != gameState.ASKED)
                     {
                         RegisterMistake("Je moet eerst om advies vragen voordat je mag Standen.");
                         return;
                     }
-                    if (!isDealerStand && geselecteerdeSpeler.LaatsteMening != "Stand")
+                    if (dealer == null && geselecteerdeSpeler.LaatsteMening != "Stand")
                     {
                         RegisterMistake("de speler wilde 'Hit', niet 'Stand'.");
                         return;
@@ -326,7 +337,7 @@ namespace BlackjackOOP
                     break;
 
                 case "Bust":
-                    if (geselecteerdeSpeler.GetCurrentHandValue() <= 21)
+                    if (!geselecteerdeSpeler.IsBust())
                     {
                         RegisterMistake("Je mag alleen 'Bust' kiezen als je handwaarde hoger is dan 21.");
                         return;
@@ -372,6 +383,39 @@ namespace BlackjackOOP
             {
                 MessageBox.Show("Iedereen is aan de beurt geweest");
             }
+        }
+
+        private bool MagStartkaartOntvangen(Player speler)
+        {
+            if (currentState != gameState.SHUFFLED)
+            {
+                RegisterMistake("Je moet je deck eerst shuffelen of je mag nu geen startkaarten meer uitdelen.");
+                return false;
+            }
+
+            int totaalPersonen = actieveSpelers.Count;
+            int wieIsAanDeBeurt = uitgedeeldeStartkaarten % totaalPersonen;
+
+            if (uitgedeeldeStartkaarten >= totaalPersonen * 2)
+            {
+                RegisterMistake("Alle startkaarten zijn al uitgedeeld.");
+                return false;
+            }
+
+            if (speler != actieveSpelers[wieIsAanDeBeurt])
+            {
+                RegisterMistake("Deze speler is niet aan de beurt.");
+                return false;
+            }
+
+            uitgedeeldeStartkaarten++;
+
+            if (uitgedeeldeStartkaarten >= totaalPersonen * 2)
+            {
+                currentState = gameState.STARTCARD;
+            }
+
+            return true;
         }
     }
 }
