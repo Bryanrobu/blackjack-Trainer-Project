@@ -416,7 +416,7 @@ namespace BlackjackOOP
                 case "Verliezer":
                     if (heeftGewonnen)
                     {
-                        RegisterMistake($"{geselecteerdeSpeler.Name} heeft eigenlijk gewonnen. Je mag deze speler niet op verliezer zetten.");
+                        RegisterMistake($"{geselecteerdeSpeler.Name} heeft eigenlijk gewonnen volgens de regels.");
                         return;
                     }
                     break;
