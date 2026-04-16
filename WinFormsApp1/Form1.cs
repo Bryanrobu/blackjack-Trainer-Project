@@ -19,7 +19,8 @@ namespace BlackjackOOP
             SHUFFLED,
             STARTCARD,
             ASKED,
-            MOVE
+            MOVE,
+            SCORE,
         }
         public static gameState currentState = gameState.SETUP;
 
@@ -57,6 +58,8 @@ namespace BlackjackOOP
             ToolStripMenuItem actieItem = new ToolStripMenuItem("Vraag actie");
             ToolStripMenuItem bustItem = new ToolStripMenuItem("Bust");
             ToolStripMenuItem scoreItem = new ToolStripMenuItem("Bekijk Kaarten");
+            ToolStripMenuItem winstItem = new ToolStripMenuItem("Winnaar");
+            ToolStripMenuItem verliesItem = new ToolStripMenuItem("Verliezer");
 
             deelItem.Tag = nieuweSpeler;
             downcardItem.Tag = nieuweSpeler;
@@ -65,6 +68,8 @@ namespace BlackjackOOP
             actieItem.Tag = nieuweSpeler;
             bustItem.Tag = nieuweSpeler;
             scoreItem.Tag = nieuweSpeler;
+            winstItem.Tag = nieuweSpeler;
+            verliesItem.Tag = nieuweSpeler;
 
             deelItem.Click += PlayerMenuItem_Click;
             downcardItem.Click += PlayerMenuItem_Click;
@@ -73,20 +78,29 @@ namespace BlackjackOOP
             actieItem.Click += PlayerMenuItem_Click;
             bustItem.Click += PlayerMenuItem_Click;
             scoreItem.Click += ScoreItem_Click;
+            winstItem.Click += ResultItem_Click;
+            verliesItem.Click += ResultItem_Click;
 
             spelerMenu.DropDownItems.AddRange(new ToolStripItem[] {
-                deelItem, downcardItem, hitItem, standItem, actieItem, bustItem, scoreItem
+                deelItem, downcardItem, hitItem, standItem, actieItem, bustItem, scoreItem, winstItem, verliesItem,
             });
 
             if (nieuweSpeler is Dealer)
             {
                 actieItem.Visible = false;
+                winstItem.Visible = false;
+                verliesItem.Visible = false;
             } else
             {
                 downcardItem.Visible = false;
             }
 
             menuStrip1.Items.Add(spelerMenu);
+        }
+
+        private void PlayerMenu(object? sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -149,10 +163,12 @@ namespace BlackjackOOP
             
             if ( currentState == gameState.START)
             {
+                deck.Shuffle();
                 currentState = gameState.SHUFFLED;
+                UpdateDisplay();
+                return;
             }
-
-            deck.Shuffle();
+            RegisterMistake("Je hebt dit deck al geshuffled");
             UpdateDisplay();
         }
 
@@ -365,6 +381,60 @@ namespace BlackjackOOP
 
             MessageBox.Show($"Kaarten van {geselecteerdeSpeler.Name}:\n\n{kaartenOverzicht}\nTotale score: {geselecteerdeSpeler.GetCurrentHandValue()}");
         }
+
+        private void ResultItem_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
+            Player geselecteerdeSpeler = (Player)clickedItem.Tag;
+            string resultaat = clickedItem.Text;
+
+
+            if (currentState != gameState.SCORE)
+            {
+                RegisterMistake("Je kunt de winnaar/verliezer pas bepalen als alle spelers klaar zijn met hun beurten.");
+                return;
+            }
+
+            Dealer dealer = actieveSpelers.OfType<Dealer>().FirstOrDefault();
+            if (dealer == null) return;
+
+            int dealerScore = dealer.GetCurrentHandValue();
+            int spelerScore = geselecteerdeSpeler.GetCurrentHandValue();
+
+            switch (resultaat)
+            {
+                case "Winnaar":
+                    if (geselecteerdeSpeler.IsBust())
+                    {
+                        RegisterMistake($"{geselecteerdeSpeler.Name} is bust en kan niet winnen.");
+                        return;
+                    }
+                    if (spelerScore <= dealerScore && !dealer.IsBust())
+                    {
+                        RegisterMistake($"{geselecteerdeSpeler.Name} heeft {spelerScore} en de dealer heeft {dealerScore}. Dat is geen winst.");
+                        return;
+                    }
+                    break;
+
+                case "Verliezer":
+                    if (spelerScore > dealerScore && !geselecteerdeSpeler.IsBust() && !dealer.IsBust())
+                    {
+                        RegisterMistake($"{geselecteerdeSpeler.Name} heeft meer dan de dealer, waarom zou die verliezen?");
+                        return;
+                    }
+                    if (dealer.IsBust())
+                    {
+                        RegisterMistake($"De dealer is bust, dus {geselecteerdeSpeler.Name} kan niet verliezen.");
+                        return;
+                    }
+                    break;
+            }
+            if (clickedItem.OwnerItem is ToolStripMenuItem spelerHoofdMenu)
+            {
+                spelerHoofdMenu.Tag = resultaat;
+                    UpdateDisplay();
+            }
+        }
         private void RegisterMistake(string message)
         {
             mistakes++;
@@ -382,6 +452,7 @@ namespace BlackjackOOP
             if (huidigeSpelerIndex >= actieveSpelers.Count)
             {
                 MessageBox.Show("Iedereen is aan de beurt geweest");
+                currentState = gameState.SCORE;
             }
         }
 
