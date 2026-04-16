@@ -25,5 +25,10 @@ namespace BlackjackOOP
                 return "Stand";
             }
         }
+
+        public bool HeeftDowncardNodig()
+        {
+            return Hand.Count == 1;
+        }
     }
 }
