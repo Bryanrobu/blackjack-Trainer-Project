@@ -19,7 +19,6 @@ namespace BlackjackOOP
                 mainGame.Size = startScreen.Size;
                 Application.Run(mainGame);
             }
-
         }
     }
 }
