@@ -398,33 +398,25 @@ namespace BlackjackOOP
             Dealer dealer = actieveSpelers.OfType<Dealer>().FirstOrDefault();
             if (dealer == null) return;
 
+            bool heeftGewonnen = geselecteerdeSpeler.HeeftGewonnenVan(dealer);
+
             int dealerScore = dealer.GetCurrentHandValue();
             int spelerScore = geselecteerdeSpeler.GetCurrentHandValue();
 
             switch (resultaat)
             {
                 case "Winnaar":
-                    if (geselecteerdeSpeler.IsBust())
+                    if (!heeftGewonnen)
                     {
-                        RegisterMistake($"{geselecteerdeSpeler.Name} is bust en kan niet winnen.");
-                        return;
-                    }
-                    if (spelerScore <= dealerScore && !dealer.IsBust())
-                    {
-                        RegisterMistake($"{geselecteerdeSpeler.Name} heeft {spelerScore} en de dealer heeft {dealerScore}. Dat is geen winst.");
+                        RegisterMistake($"{geselecteerdeSpeler.Name} heeft niet gewonnen volgens de regels.");
                         return;
                     }
                     break;
 
                 case "Verliezer":
-                    if (spelerScore > dealerScore && !geselecteerdeSpeler.IsBust() && !dealer.IsBust())
+                    if (heeftGewonnen)
                     {
-                        RegisterMistake($"{geselecteerdeSpeler.Name} heeft meer dan de dealer, waarom zou die verliezen?");
-                        return;
-                    }
-                    if (dealer.IsBust())
-                    {
-                        RegisterMistake($"De dealer is bust, dus {geselecteerdeSpeler.Name} kan niet verliezen.");
+                        RegisterMistake($"{geselecteerdeSpeler.Name} heeft eigenlijk gewonnen volgens de regels.");
                         return;
                     }
                     break;

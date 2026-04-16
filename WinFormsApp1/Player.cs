@@ -61,5 +61,11 @@ namespace BlackjackOOP
         {
             return GetCurrentHandValue() > 21;
         }
+        public virtual bool HeeftGewonnenVan(Player dealer)
+        {
+            if (this.IsBust()) return false;
+            if (dealer.IsBust()) return true;
+            return this.GetCurrentHandValue() > dealer.GetCurrentHandValue();
+        }
     }
 }
