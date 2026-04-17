@@ -11,6 +11,7 @@ namespace BlackjackOOP
         private int mistakes = 0;
         private int uitgedeeldeStartkaarten = 0;
         private List<Player> actieveSpelers = new List<Player>();
+        private List<string> mistakeMessages = new List<string>();
 
         public enum gameState
         {
@@ -189,6 +190,11 @@ namespace BlackjackOOP
                 return;
             }
 
+            if (currentState == gameState.SCORE)
+            {
+                RegisterMistake("Het spel is afgelopen! Je kunt nu alleen nog winnaars aanwijzen of de statistieken bekijken.");
+            }
+
             Player geselecteerdeSpeler = (Player)clickedItem.Tag;
             string actie = clickedItem.Text;
             Dealer dealer = geselecteerdeSpeler as Dealer;
@@ -203,7 +209,7 @@ namespace BlackjackOOP
             {
                 if (currentState == gameState.START || currentState == gameState.SHUFFLED)
                 {
-                    RegisterMistake("De startkaarten moeten eerst worden uitgedeeld voordat je deze actie mag doen.");
+                    RegisterMistake($"De startkaarten moeten eerst worden uitgedeeld voordat je {actie} mag doen.");
                     return;
                 }
 
@@ -219,7 +225,7 @@ namespace BlackjackOOP
                 case "Geef Startkaart":
                     if (dealer != null && dealer.HeeftDowncardNodig())
                     {
-                        RegisterMistake("De tweede kaart van de dealer moet gesloten zijn! Gebruik de 'Geef Downcard' knop.");
+                        RegisterMistake("De tweede kaart van de dealer moet gesloten zijn, u geeft nu een normale kaart");
                         return;
                     }
 
@@ -235,12 +241,12 @@ namespace BlackjackOOP
                 case "Geef Downcard":
                     if (dealer == null)
                     {
-                        RegisterMistake("Alleen de dealer kan een Downcard ontvangen.");
+                        RegisterMistake("Een player kan geen Downcard ontvangen");
                         return;
                     }
                     if (!dealer.HeeftDowncardNodig())
                     {
-                        RegisterMistake("De dealer moet eerst 1 open kaart hebben, of heeft beide kaarten al.");
+                        RegisterMistake("u kunt geen downcard geven. De dealer moet eerst 1 open kaart hebben, of heeft beide kaarten al.");
                         return;
                     }
 
@@ -266,11 +272,11 @@ namespace BlackjackOOP
                             break;
 
                         case gameState.ASKED:
-                            RegisterMistake("Je hebt al om advies gevraagd.");
+                            RegisterMistake("Je hebt nu 2 keer om advies gevraagd.");
                             return;
 
                         default:
-                            RegisterMistake("Je mag nu nog geen advies vragen.");
+                            RegisterMistake("Je vraagt te vroeg om advies.");
                             return;
                     }
                     string advies = geselecteerdeSpeler.getOpinion();
@@ -363,7 +369,7 @@ namespace BlackjackOOP
                         case gameState.MOVE:
                             break;
                         default:
-                            RegisterMistake("Je mag nu nog geen 'Bust' kiezen.");
+                            RegisterMistake("Je bent te vroeg met 'Bust' kiezen, het spel is nog niet klaar,");
                             return;
                     }
                     BeurtVoorbij(geselecteerdeSpeler, (ToolStripMenuItem)clickedItem.OwnerItem, "Bust");
@@ -416,7 +422,7 @@ namespace BlackjackOOP
                 case "Verliezer":
                     if (heeftGewonnen)
                     {
-                        RegisterMistake($"{geselecteerdeSpeler.Name} heeft eigenlijk gewonnen volgens de regels.");
+                        RegisterMistake($"{geselecteerdeSpeler.Name} heeft niet verloren volgens de regels.");
                         return;
                     }
                     break;
@@ -431,6 +437,7 @@ namespace BlackjackOOP
         private void RegisterMistake(string message)
         {
             mistakes++;
+            mistakeMessages.Add(message);
             UpdateDisplay();
             MessageBox.Show(message);
         }
@@ -483,7 +490,7 @@ namespace BlackjackOOP
         }
         private void btnStats_Click(object sender, EventArgs e)
         {
-            StatsForm stats = new StatsForm(actieveSpelers, mistakes);
+            StatsForm stats = new StatsForm(actieveSpelers, mistakes, mistakeMessages);
 
             stats.StartPosition = FormStartPosition.Manual;
             stats.Location = this.Location;

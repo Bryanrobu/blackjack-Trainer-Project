@@ -4,7 +4,7 @@ namespace BlackjackOOP
 {
     public partial class StatsForm : Form
     {
-        public StatsForm(List<Player> spelers, int mistakes)
+        public StatsForm(List<Player> spelers, int mistakes, List<string> foutMeldingen)
         {
             InitializeComponent();
 
@@ -14,10 +14,10 @@ namespace BlackjackOOP
             button1.Text = "Opnieuw";
             button2.Text = "Afsluiten";
 
-            VulStatistieken(spelers);
+            VulStatistieken(spelers, foutMeldingen);
         }
 
-        private void VulStatistieken(List<Player> spelers)
+        private void VulStatistieken(List<Player> spelers, List<string> foutMeldingen)
         {
             textBox1.Clear();
             StringBuilder sb = new StringBuilder();
@@ -60,6 +60,21 @@ namespace BlackjackOOP
                 }
 
                 sb.AppendLine(" ");
+            }
+
+            if (foutMeldingen.Count > 0)
+            {
+                sb.AppendLine("Dit zijn uw gemaakte fouten:");
+                for (int i = 0; i < foutMeldingen.Count; i++)
+                {
+                    sb.AppendLine($"{i + 1}. {foutMeldingen[i]}");
+                }
+                sb.AppendLine();
+            }
+            else
+            {
+                sb.AppendLine("Perfect gespeeld! Geen fouten gemaakt.");
+                sb.AppendLine();
             }
 
             textBox1.Text = sb.ToString();
