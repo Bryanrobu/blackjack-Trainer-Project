@@ -223,6 +223,14 @@ namespace BlackjackOOP
                     break;
 
                 case "Ask Action":
+
+
+                    if (selectedPlayer.GetCurrentHandValue() > 21)
+                    {
+                        RegisterMistake("You are asking for advice while you have over 21 points");
+                        return;
+                    }
+
                     switch (currentState)
                     {
 
