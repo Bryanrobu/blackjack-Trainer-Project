@@ -20,7 +20,7 @@ namespace BlackjackOOP
             NumberOfPlayers = (int)numericUpDownPlayers.Value;
             if (NumberOfPlayers < 1 || NumberOfPlayers > 4)
             {
-                MessageBox.Show("Kies a.u.b. een aantal spelers tussen de 1 en 4.");
+                MessageBox.Show("Please choose an amount of players in between 1 and 4.");
                 return;
             }
             switch (Form1.currentState)

@@ -8,7 +8,7 @@ namespace BlackjackOOP
 {
     public class Dealer : Player
     {
-        public Dealer() : base("Dealer (U zelf)")
+        public Dealer() : base("Dealer (Yourself)")
         {
             
         }
@@ -26,7 +26,7 @@ namespace BlackjackOOP
             }
         }
 
-        public bool HeeftDowncardNodig()
+        public bool NeedsDownCard()
         {
             return Hand.Count == 1;
         }

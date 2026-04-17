@@ -9,14 +9,14 @@ namespace BlackjackOOP
         public string Name { get; set; }
         public List<Card> Hand { get; private set; } = new List<Card>();
 
-        public string LaatsteMening { get; private set; }
+        public string lastOpinion { get; private set; }
 
         public string Status { get; set; } = "Bezig";
 
         public string getOpinion()
         {
-            LaatsteMening = GetMoveOpinion();
-            return LaatsteMening;
+            lastOpinion = GetMoveOpinion();
+            return lastOpinion;
         }
 
         private static Random _random = new Random();
@@ -63,7 +63,7 @@ namespace BlackjackOOP
         {
             return GetCurrentHandValue() > 21;
         }
-        public virtual bool HeeftGewonnenVan(Player dealer)
+        public virtual bool HasBeaten(Player dealer)
         {
             if (this.IsBust()) return false;
             if (dealer.IsBust()) return true;

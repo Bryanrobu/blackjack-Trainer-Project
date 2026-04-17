@@ -4,33 +4,32 @@ namespace BlackjackOOP
 {
     public partial class StatsForm : Form
     {
-        public StatsForm(List<Player> spelers, int mistakes, List<string> foutMeldingen)
+        public StatsForm(List<Player> players, int mistakes, List<string> mistakeDetails)
         {
             InitializeComponent();
 
-            label1.Text = "Eindstatistieken van de Ronde";
-            label2.Text = $"Aantal gemaakte fouten: {mistakes}";
+            label1.Text = "Final Statistics of the Round";
+            label2.Text = $"Number of mistakes made: {mistakes}";
 
-            button1.Text = "Opnieuw";
-            button2.Text = "Afsluiten";
+            button1.Text = "Play Again";
+            button2.Text = "Exit";
 
-            VulStatistieken(spelers, foutMeldingen);
+            VulStatistieken(players, mistakeDetails);
         }
 
-        private void VulStatistieken(List<Player> spelers, List<string> foutMeldingen)
+        private void VulStatistieken(List<Player> players, List<string> mistakeDetails)
         {
             textBox1.Clear();
             StringBuilder sb = new StringBuilder();
 
-            foreach (Player speler in spelers)
+            foreach (Player player in players)
             {
-                sb.AppendLine($"NAME: {speler.Name}");
-                sb.AppendLine($"SCORE: {speler.GetCurrentHandValue()}");
-                sb.AppendLine($"KAARTEN: {string.Join(", ", speler.Hand)}");
-
-                if (speler is Dealer)
+                sb.AppendLine($"NAME: {player.Name}");
+                sb.AppendLine($"SCORE: {player.GetCurrentHandValue()}");
+                sb.AppendLine($"Cards: {string.Join(", ", player.Hand)}");
+                if (player is Dealer)
                 {
-                    if (speler.IsBust())
+                    if (player.IsBust())
                     {
                         sb.AppendLine("STATUS: Bust");
                     }
@@ -39,41 +38,41 @@ namespace BlackjackOOP
                         sb.AppendLine("STATUS: Dealer");
                     }
                 }
-                if (speler is not Dealer)
+                if (player is not Dealer)
                 { 
-                    if (speler.IsBust())
+                    if (player.IsBust())
                     {
-                        sb.AppendLine("STATUS: BUST (Verloren)");
+                        sb.AppendLine("STATUS: BUST (Lost)");
                     }
-                    else if (speler.Status == "Winnaar")
+                    else if (player.Status == "Winner")
                     {
-                        sb.AppendLine("STATUS: Gewonnen ");
+                        sb.AppendLine("STATUS: Won");
                     }
-                    else if (speler.Status == "Verliezer")
+                    else if (player.Status == "Loser")
                     {
-                        sb.AppendLine("STATUS: Verloren");
+                        sb.AppendLine("STATUS: Lost");
                     }
                     else
                     {
-                        sb.AppendLine("STATUS: Nog niet klaar");
+                        sb.AppendLine("STATUS: Not finished");
                     }
                 }
 
                 sb.AppendLine(" ");
             }
 
-            if (foutMeldingen.Count > 0)
+            if (mistakeDetails.Count > 0)
             {
-                sb.AppendLine("Dit zijn uw gemaakte fouten:");
-                for (int i = 0; i < foutMeldingen.Count; i++)
+                sb.AppendLine("These are your mistakes:");
+                for (int i = 0; i < mistakeDetails.Count; i++)
                 {
-                    sb.AppendLine($"{i + 1}. {foutMeldingen[i]}");
+                    sb.AppendLine($"{i + 1}. {mistakeDetails[i]}");
                 }
                 sb.AppendLine();
             }
             else
             {
-                sb.AppendLine("Perfect gespeeld! Geen fouten gemaakt.");
+                sb.AppendLine("Perfect play! No mistakes made.");
                 sb.AppendLine();
             }
 
