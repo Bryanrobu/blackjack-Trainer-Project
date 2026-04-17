@@ -39,22 +39,24 @@ namespace BlackjackOOP
                         sb.AppendLine("STATUS: Dealer");
                     }
                 }
-
-                if (speler.IsBust())
-                {
-                    sb.AppendLine("STATUS: BUST (Verloren)");
-                }
-                else if (speler.Status == "Winnaar")
-                {
-                    sb.AppendLine("STATUS: Gewonnen ");
-                }
-                else if (speler.Status == "Verliezer")
-                {
-                    sb.AppendLine("STATUS: Verloren");
-                }
-                else
-                {
-                    sb.AppendLine("STATUS: Nog niet klaar");
+                if (speler is not Dealer)
+                { 
+                    if (speler.IsBust())
+                    {
+                        sb.AppendLine("STATUS: BUST (Verloren)");
+                    }
+                    else if (speler.Status == "Winnaar")
+                    {
+                        sb.AppendLine("STATUS: Gewonnen ");
+                    }
+                    else if (speler.Status == "Verliezer")
+                    {
+                        sb.AppendLine("STATUS: Verloren");
+                    }
+                    else
+                    {
+                        sb.AppendLine("STATUS: Nog niet klaar");
+                    }
                 }
 
                 sb.AppendLine(" ");
