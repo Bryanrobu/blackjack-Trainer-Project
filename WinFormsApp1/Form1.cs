@@ -31,12 +31,7 @@ namespace BlackjackOOP
 
             deck = new Deck();
             UpdateDisplay();
-            button1.Text = "Next Card";
-            button2.Text = "Shuffle Deck";
-            button3.Text = "Reset Deck";
-            label2.Text = "Players: " + spelers;
-            label3.Text = currentState.ToString();
-            label4.Text = "mistakes: " + mistakes.ToString();
+            button1.Text = "Shuffle Deck";
             for (int i = 1; i <= spelers; i++)
             {
                 CreatePlayerMenu(new Player("Speler " + i));
@@ -110,9 +105,6 @@ namespace BlackjackOOP
         }
         private void UpdateDisplay()
         {
-            label3.Text = currentState.ToString();
-            label4.Text = "mistakes: " + mistakes.ToString();
-
             foreach (ToolStripMenuItem item in menuStrip1.Items)
             {
                 if (item.DropDownItems.Count > 0 && item.DropDownItems[0].Tag is Player speler)
@@ -134,32 +126,10 @@ namespace BlackjackOOP
             else
             {
                 Card currentCard = deck.cards[currentIndex];
-                label1.Text = currentCard.ToString();
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {
-            switch (currentState)
-            {
-                case gameState.SHUFFLED:
-                    currentIndex++;
-                    break;
-                default:
-                    mistakes++;
-                    break;
-            }
-
-            if (currentIndex >= deck.cards.Count)
-            {
-                MessageBox.Show("No cards left");
-                return;
-            }
-
-            UpdateDisplay();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
         {
             
             if ( currentState == gameState.START)
@@ -170,14 +140,6 @@ namespace BlackjackOOP
                 return;
             }
             RegisterMistake("Je hebt dit deck al geshuffled");
-            UpdateDisplay();
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            currentState = gameState.START;
-            deck = new Deck();
-            currentIndex = 0;
             UpdateDisplay();
         }
 

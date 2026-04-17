@@ -11,7 +11,6 @@ namespace BlackjackOOP
             InitializeComponent();
             this.StartPosition = FormStartPosition.CenterScreen;
             button1.Text = "Start Game";
-            label1.Text = Form1.currentState.ToString();
             numericUpDownPlayers.Minimum = 1;
             numericUpDownPlayers.Maximum = 4;
         }
