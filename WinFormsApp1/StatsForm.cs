@@ -28,6 +28,18 @@ namespace BlackjackOOP
                 sb.AppendLine($"SCORE: {speler.GetCurrentHandValue()}");
                 sb.AppendLine($"KAARTEN: {string.Join(", ", speler.Hand)}");
 
+                if (speler is Dealer)
+                {
+                    if (speler.IsBust())
+                    {
+                        sb.AppendLine("STATUS: Bust");
+                    }
+                    else
+                    {
+                        sb.AppendLine("STATUS: Dealer");
+                    }
+                }
+
                 if (speler.IsBust())
                 {
                     sb.AppendLine("STATUS: BUST (Verloren)");
