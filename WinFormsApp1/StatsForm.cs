@@ -14,10 +14,10 @@ namespace BlackjackOOP
             button1.Text = "Play Again";
             button2.Text = "Exit";
 
-            VulStatistieken(players, mistakeDetails);
+            FillStatistics(players, mistakeDetails);
         }
 
-        private void VulStatistieken(List<Player> players, List<string> mistakeDetails)
+        private void FillStatistics(List<Player> players, List<string> mistakeDetails)
         {
             textBox1.Clear();
             StringBuilder sb = new StringBuilder();
