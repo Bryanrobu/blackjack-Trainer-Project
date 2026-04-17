@@ -257,7 +257,11 @@ namespace BlackjackOOP
                     {
                         selectedPlayer.getOpinion();
 
-                        wrongDealerChoice(selectedPlayer);
+                        if (selectedPlayer.lastOpinion != "Hit")
+                        {
+                            RegisterMistake($"You have a score of: {selectedPlayer.GetCurrentHandValue()} and have to '{selectedPlayer.lastOpinion}'.");
+                            return;
+                        }
 
                         currentState = gameState.ASKED;
                     }
@@ -297,7 +301,11 @@ namespace BlackjackOOP
                     {
                         selectedPlayer.getOpinion();
 
-                        wrongDealerChoice(selectedPlayer);
+                        if (selectedPlayer.lastOpinion != "Stand")
+                        {
+                            RegisterMistake($"You have a score of: {selectedPlayer.GetCurrentHandValue()} and have to '{selectedPlayer.lastOpinion}'.");
+                            return;
+                        }
 
                         currentState = gameState.ASKED;
                     }
@@ -466,15 +474,6 @@ namespace BlackjackOOP
             if (result == DialogResult.Abort)
             {
                 Application.Exit();
-            }
-        }
-
-        private void wrongDealerChoice(Player selectedPlayer)
-        {
-            if (selectedPlayer.lastOpinion != "Hit")
-            {
-                RegisterMistake($"You have a score of: {selectedPlayer.GetCurrentHandValue()} and have to '{selectedPlayer.lastOpinion}'.");
-                return;
             }
         }
     }
