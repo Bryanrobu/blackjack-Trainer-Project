@@ -1,4 +1,4 @@
-namespace WinFormsApp1
+namespace BlackjackOOP
 {
     internal static class Program
     {
@@ -8,10 +8,17 @@ namespace WinFormsApp1
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            StartScreen startScreen = new StartScreen();
+
+            if (startScreen.ShowDialog() == DialogResult.OK)
+            {
+                Form1 mainGame = new Form1(startScreen.NumberOfPlayers);
+                mainGame.StartPosition = FormStartPosition.Manual;
+                mainGame.Location = startScreen.Location;
+                mainGame.Size = startScreen.Size;
+                Application.Run(mainGame);
+            }
         }
     }
 }
