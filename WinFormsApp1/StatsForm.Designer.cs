@@ -59,6 +59,7 @@
             textBox1.Location = new Point(12, 42);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
+            textBox1.ReadOnly = true;
             textBox1.Size = new Size(776, 338);
             textBox1.TabIndex = 2;
             // 
